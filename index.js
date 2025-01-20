@@ -20,21 +20,7 @@ app.use(express.json())
 app.use(cookieParser())
 app.use(morgan('dev'))
 
-const verifyToken = async (req, res, next) => {
-  const token = req.cookies?.token
 
-  if (!token) {
-    return res.status(401).send({ message: 'unauthorized access' })
-  }
-  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
-    if (err) {
-      console.log(err)
-      return res.status(401).send({ message: 'unauthorized access' })
-    }
-    req.user = decoded
-    next()
-  })
-}
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.28bsr.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 console.log(uri);
@@ -50,26 +36,11 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     const db = client.db('study_portal')
-    const usersCollection = db.collection('users')
+    const userCollection = db.collection('users')
     // const plantsCollection = db.collection('plants')
 
     // save or update a user in db
-    app.post('/users/:email', async (req, res) => {
-      const email = req.params.email
-      const query = { email }
-      const user = req.body
-      // check if user exists in db
-      const isExist = await usersCollection.findOne(query)
-      if (isExist) {
-        return res.send(isExist)
-      }
-      const result = await usersCollection.insertOne({
-        ...user,
-        role: 'student',
-        timestamp: Date.now(),
-      })
-      res.send(result)
-    })
+
 
     // Generate jwt token
     app.post('/jwt', async (req, res) => {
@@ -85,6 +56,115 @@ async function run() {
         })
         .send({ success: true })
     })
+
+
+    const verifyToken = async (req, res, next) => {
+      const token = req.cookies?.token
+    
+      if (!token) {
+        return res.status(401).send({ message: 'unauthorized access' })
+      }
+      jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
+        if (err) {
+          console.log(err)
+          return res.status(401).send({ message: 'unauthorized access' })
+        }
+        console.log('Decoded JWT:', decoded); 
+        req.decoded = decoded;
+        next();
+      })
+    }
+    
+    
+    
+    const verifyAdmin = async (req, res, next) => {
+      const email = req.decoded.email;
+      const query = { email: email };
+      const user = await userCollection.findOne(query);
+      const isAdmin = user?.role === 'admin';
+      if (!isAdmin) {
+        return res.status(403).send({ message: 'forbidden access' });
+      }
+      next();
+    }
+
+   
+    // users related api
+    app.get('/users', verifyToken, verifyAdmin, async (req, res) => {
+      const result = await userCollection.find().toArray();
+      res.send(result);
+    });
+
+    app.get('/users/admin/:email', verifyToken, async (req, res) => {
+      const email = req.params.email;
+      console.log('Decoded Token Email:', req.decoded.email); // Debugging
+      console.log('Requested Email:', email);
+      // console.log(req.decoded);
+
+      if (email !== req.decoded.email) {
+        return res.status(403).send({ message: 'forbidden access' })
+      }
+
+      const query = { email: email };
+      const user = await userCollection.findOne(query);
+      let admin = false;
+      if (user) {
+        admin = user?.role === 'admin';
+      }
+      console.log('Admin:', admin);
+      
+      res.send({ admin });
+    })
+
+
+    app.patch('/users/admin/:id', verifyToken, verifyAdmin, async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const updatedDoc = {
+        $set: {
+          role: 'admin'
+        }
+      }
+      const result = await userCollection.updateOne(filter, updatedDoc);
+      res.send(result);
+    })
+
+
+
+
+
+    app.post('/users/:email', async (req, res) => {
+      const email = req.params.email
+      const query = { email }
+      const user = req.body
+      console.log(user);
+      // check if user exists in db
+      const isExist = await userCollection.findOne(query)
+      if (isExist) {
+        return res.send({ message: 'user already exists' })
+      }
+
+  
+
+    
+  
+
+     
+
+        const result = await userCollection.insertOne({
+           ...user,
+           timestamp: Date.now(),
+   
+         })
+
+         res.send(result)
+      
+      
+     
+    })
+
+    
+    
     // Logout
     app.get('/logout', async (req, res) => {
       try {
