@@ -136,12 +136,12 @@ async function run() {
     })
 
 
-    app.patch('/users/admin/:id', verifyToken, verifyAdmin, async (req, res) => {
-      const id = req.params.id;
+    app.patch('/users/:role/:id', verifyToken, verifyAdmin, async (req, res) => {
+      const {role,id}= req.params;
       const filter = { _id: new ObjectId(id) };
       const updatedDoc = {
         $set: {
-          role: 'admin'
+          role: role
         }
       }
       const result = await userCollection.updateOne(filter, updatedDoc);
