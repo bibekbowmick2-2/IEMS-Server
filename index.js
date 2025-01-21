@@ -37,6 +37,7 @@ async function run() {
   try {
     const db = client.db('study_portal')
     const userCollection = db.collection('users')
+    const sessionCollection = db.collection('sessions')
     // const plantsCollection = db.collection('plants')
 
     // save or update a user in db
@@ -135,6 +136,37 @@ async function run() {
       res.send({ admin });
     })
 
+
+
+    app.get('/users/tutor/:email', verifyToken, async (req, res) => {
+      const email = req.params.email;
+      console.log('Decoded Token Email:', req.decoded.email); // Debugging
+      console.log('Requested Email:', email);
+      // console.log(req.decoded);
+
+      if (email !== req.decoded.email) {
+        return res.status(403).send({ message: 'forbidden access' })
+      }
+
+      const query = { email: email };
+      const user = await userCollection.findOne(query);
+      let tutor = false;
+      if (user) {
+        tutor = user?.role === 'tutor';
+      }
+      console.log('Tutor:', tutor);
+      
+      res.send({ tutor });
+    })
+
+
+
+
+    app.post('/create-session', verifyToken, async (req, res) => {
+      const item = req.body;
+      const result = await sessionCollection.insertOne(item);
+      res.send(result);
+    });
 
     app.patch('/users/:role/:id', verifyToken, verifyAdmin, async (req, res) => {
       const {role,id}= req.params;
