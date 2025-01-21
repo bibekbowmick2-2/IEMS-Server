@@ -110,8 +110,8 @@ async function run() {
     })
 
     // menu related apis
-    app.get('/menu', async (req, res) => {
-      const result = await menuCollection.find().toArray();
+    app.get('/sessions', async (req, res) => {
+      const result = await sessionCollection.find().toArray();
       res.send(result);
     });
 
@@ -167,6 +167,8 @@ async function run() {
       const result = await sessionCollection.insertOne(item);
       res.send(result);
     });
+
+    
 
     app.patch('/users/:role/:id', verifyToken, verifyAdmin, async (req, res) => {
       const {role,id}= req.params;
