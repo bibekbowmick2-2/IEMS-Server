@@ -109,6 +109,17 @@ async function run() {
       res.send(result);
     })
 
+
+
+    app.delete('/session/:id', verifyToken, verifyAdmin, async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) }
+      const result = await sessionCollection.deleteOne(query);
+      res.send(result);
+    })
+
+    
+
     // menu related apis
     app.get('/sessions', async (req, res) => {
       const result = await sessionCollection.find().toArray();
@@ -179,6 +190,34 @@ async function run() {
         }
       }
       const result = await userCollection.updateOne(filter, updatedDoc);
+      res.send(result);
+    })
+
+
+
+    app.patch('/sessions/:status/:id', verifyToken, verifyAdmin, async (req, res) => {
+      const {status,id}= req.params;
+      const filter = { _id: new ObjectId(id) };
+      const updatedDoc = {
+        $set: {
+          status: status
+        }
+      }
+      const result = await sessionCollection.updateOne(filter, updatedDoc);
+      res.send(result);
+    })
+
+
+    app.patch('/registration/fee/:id', verifyToken, verifyAdmin, async (req, res) => {
+      const id = req.params.id;
+      const {fee}= req.body;
+      const filter = { _id: new ObjectId(id) };
+      const updatedDoc = {
+        $set: {
+          fee: fee
+        }
+      }
+      const result = await sessionCollection.updateOne(filter, updatedDoc);
       res.send(result);
     })
 
