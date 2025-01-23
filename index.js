@@ -38,6 +38,8 @@ async function run() {
     const db = client.db('study_portal')
     const userCollection = db.collection('users')
     const sessionCollection = db.collection('sessions')
+    const bookedSessionCollection = db.collection('bookedSessions')
+    const commentCollection =  db.collection('comments')
     // const plantsCollection = db.collection('plants')
 
     // save or update a user in db
@@ -179,6 +181,46 @@ async function run() {
       res.send(result);
     });
 
+
+    app.post('/bookings', async (req, res) => {
+      const item = req.body;
+    
+      try {
+      
+        const existingBooking = await bookedSessionCollection.findOne({
+          _id: item._id,
+          session_title: item.session_title,
+        });
+    
+        if (existingBooking) {
+        
+          return res.status(400).send({ message: "Session already booked!" });
+        }
+    
+        
+        const result = await bookedSessionCollection.insertOne(item);
+        res.send(result);
+      } catch (error) {
+        console.error("Error inserting booking:", error);
+        res.status(500).send({ message: "Failed to book session!" });
+      }
+    });
+
+
+
+    app.post("/comment", async (req, res) => {
+      const data = req.body;
+      console.log(data);
+      const result = await commentCollection.insertOne(data);
+      res.send(result);
+    });
+
+    app.get("/commentm/:id", async (req, res) => {
+      const id = req.params.id;
+      const result = await commentCollection.find({ productId: id }).toArray();
+      res.send(result);
+    });
+    
     
 
     app.patch('/users/:role/:id', verifyToken, verifyAdmin, async (req, res) => {
@@ -272,18 +314,7 @@ async function run() {
       }
     })
 
-    // save a plant data in db
-    // app.post('/plants', verifyToken, async (req, res) => {
-    //   const plant = req.body
-    //   const result = await plantsCollection.insertOne(plant)
-    //   res.send(result)
-    // })
-
-    // // get all plants from db
-    // app.get('/plants', async (req, res) => {
-    //   const result = await plantsCollection.find().limit(20).toArray()
-    //   res.send(result)
-    // })
+    
 
   
     console.log(
