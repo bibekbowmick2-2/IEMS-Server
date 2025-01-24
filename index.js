@@ -175,6 +175,31 @@ async function run() {
 
 
 
+
+    app.get('/users/student/:email', verifyToken, async (req, res) => {
+      const email = req.params.email;
+      console.log('Decoded Token Email:', req.decoded.email); // Debugging
+      console.log('Requested Email:', email);
+      // console.log(req.decoded);
+
+      if (email !== req.decoded.email) {
+        return res.status(403).send({ message: 'forbidden access' })
+      }
+
+      const query = { email: email };
+      const user = await userCollection.findOne(query);
+      let student = false;
+      if (user) {
+        student = user?.role === 'student';
+      }
+      console.log('Student:', student);
+      
+      res.send({ student });
+    })
+
+
+
+
     app.post('/create-session', verifyToken, async (req, res) => {
       const item = req.body;
       const result = await sessionCollection.insertOne(item);
@@ -184,20 +209,29 @@ async function run() {
 
     app.post('/bookings', async (req, res) => {
       const item = req.body;
+      console.log(item);
+
+      if(item._id)
+      {
+         delete item._id
+      }
     
       try {
       
         const existingBooking = await bookedSessionCollection.findOne({
-          _id: item._id,
+          email: item.email,
           session_title: item.session_title,
+          
+
         });
     
         if (existingBooking) {
-        
-          return res.status(400).send({ message: "Session already booked!" });
+          return res
+            .status(400)
+            .send({ message: "You have already booked this session!" });
         }
     
-        
+    
         const result = await bookedSessionCollection.insertOne(item);
         res.send(result);
       } catch (error) {
@@ -205,7 +239,7 @@ async function run() {
         res.status(500).send({ message: "Failed to book session!" });
       }
     });
-
+    
 
 
     app.post("/comment", async (req, res) => {
@@ -220,6 +254,24 @@ async function run() {
       const result = await commentCollection.find({ productId: id }).toArray();
       res.send(result);
     });
+
+
+
+
+
+    app.get("/bookedsessionall", async (req, res) => {
+    
+    
+      const result = await bookedSessionCollection.find().toArray();
+      res.send(result);
+      
+    });
+
+    // app.get("/bookedsession/:id", async (req, res) => {
+    //   const id = req.params.id;
+    //   const result = await bookedSessionCollection.find({ _id: id }).toArray();
+    //   res.send(result);
+    // });
     
     
 
