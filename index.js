@@ -40,6 +40,7 @@ async function run() {
     const sessionCollection = db.collection('sessions')
     const bookedSessionCollection = db.collection('bookedSessions')
     const commentCollection =  db.collection('comments')
+    const noteCollection =  db.collection('notes')
     // const plantsCollection = db.collection('plants')
 
     // save or update a user in db
@@ -120,6 +121,17 @@ async function run() {
       res.send(result);
     })
 
+
+
+    app.delete('/delete-note/:id', verifyToken,async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) }
+      const result = await noteCollection.deleteOne(query);
+      res.send(result);
+    })
+
+
+    
     
 
     // menu related apis
@@ -205,6 +217,22 @@ async function run() {
       const result = await sessionCollection.insertOne(item);
       res.send(result);
     });
+
+
+    app.post('/create-note', verifyToken, async (req, res) => {
+      const item = req.body;
+      const result = await noteCollection.insertOne(item);
+      res.send(result);
+    });
+
+
+    app.get('/manage-note', async (req, res) => {
+      const result = await noteCollection.find().toArray();
+      res.send(result);
+    });
+
+
+    
 
 
     app.post('/bookings', async (req, res) => {
@@ -314,6 +342,31 @@ async function run() {
       const result = await sessionCollection.updateOne(filter, updatedDoc);
       res.send(result);
     })
+
+
+
+
+    app.patch('/manage-note/:id', async (req, res) => {
+      const id = req.params.id;
+      const { title, description } = req.body; 
+    
+      try {
+        const result = await noteCollection.updateOne(
+          { _id: new ObjectId(id) },
+          {
+            $set: {
+              title,
+              description,
+            },
+          }
+        );
+        res.send(result);
+      } catch (error) {
+        console.error("Error updating note:", error);
+        res.status(500).send({ message: "Failed to update note" });
+      }
+    });
+    
 
 
 
