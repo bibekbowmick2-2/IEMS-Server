@@ -104,6 +104,13 @@ async function run() {
     });
 
 
+    //normal users
+    app.get('/tutor-user', async (req, res) => {
+      const result = await userCollection.find().toArray();
+      res.send(result);
+    });
+
+
 
     app.delete('/users/:id', verifyToken, verifyAdmin, async (req, res) => {
       const id = req.params.id;
