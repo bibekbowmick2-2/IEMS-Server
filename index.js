@@ -41,6 +41,7 @@ async function run() {
     const bookedSessionCollection = db.collection('bookedSessions')
     const commentCollection =  db.collection('comments')
     const noteCollection =  db.collection('notes')
+    const feedbackCollection =  db.collection('feedbacks')
     // const plantsCollection = db.collection('plants')
 
     // save or update a user in db
@@ -229,6 +230,20 @@ async function run() {
     app.post('/create-note', verifyToken, async (req, res) => {
       const item = req.body;
       const result = await noteCollection.insertOne(item);
+      res.send(result);
+    });
+
+
+
+    app.post('/feedback', verifyToken, verifyAdmin, async (req, res) => {
+      const {title,description,tutorname,email,session_title} = req.body;
+      const result = await feedbackCollection.insertOne({title,description,tutorname,email,session_title});
+      res.send(result);
+    });
+
+
+    app.get('/feedbacks', async (req, res) => {
+      const result = await feedbackCollection.find().toArray();
       res.send(result);
     });
 
