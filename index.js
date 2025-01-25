@@ -366,6 +366,43 @@ async function run() {
         res.status(500).send({ message: "Failed to update note" });
       }
     });
+
+
+
+
+
+    app.patch('/manage-session/:id', verifyToken,verifyAdmin, async (req, res) => {
+      const id = req.params.id;
+      const { title, description, start_date, end_date, duration, fee, class_start_date, class_end_date  } = req.body; 
+    
+      try {
+        const result = await sessionCollection.updateOne(
+          { _id: new ObjectId(id) },
+          {
+            $set: {
+              title,
+              description,
+              start_date,
+              end_date,
+              duration,
+              fee,
+              class_start_date,
+              class_end_date,
+
+      
+            },
+          }
+        );
+        res.send(result);
+      } catch (error) {
+        console.error("Error updating note:", error);
+        res.status(500).send({ message: "Failed to update note" });
+      }
+    });
+
+
+
+   
     
 
 
