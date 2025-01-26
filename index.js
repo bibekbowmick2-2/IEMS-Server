@@ -248,6 +248,24 @@ async function run() {
     });
 
 
+    app.get("/search", verifyToken,verifyAdmin, async (req, res) => {
+      const query = req.query.q;
+
+      try {
+        const items = await userCollection
+          .find({
+            $or: [{ email: { $regex: query, $options: "i" } },
+            { name: { $regex: query, $options: "i" } },
+           ],
+          })
+          .toArray();
+        res.send(items);
+      } catch (error) {
+        res.status(500).send({ error: error.message });
+      }
+    });
+
+
     app.get('/manage-note', async (req, res) => {
       const result = await noteCollection.find().toArray();
       res.send(result);
