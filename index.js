@@ -23,7 +23,7 @@ app.use(morgan('dev'))
 
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.28bsr.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
-console.log(uri);
+
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -72,10 +72,10 @@ async function run() {
       }
       jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
         if (err) {
-          console.log(err)
+          
           return res.status(401).send({ message: 'unauthorized access' })
         }
-        console.log('Decoded JWT:', decoded); 
+        
         req.decoded = decoded;
         next();
       })
@@ -158,11 +158,14 @@ async function run() {
       res.send(result);
     });
 
+    app.get('/', async (req, res) => {
+      const result = await sessionCollection.find().toArray();
+      res.send(result);
+    });
+
     app.get('/users/admin/:email', verifyToken, async (req, res) => {
       const email = req.params.email;
-      console.log('Decoded Token Email:', req.decoded.email); // Debugging
-      console.log('Requested Email:', email);
-      // console.log(req.decoded);
+    
 
       if (email !== req.decoded.email) {
         return res.status(403).send({ message: 'forbidden access' })
@@ -174,7 +177,7 @@ async function run() {
       if (user) {
         admin = user?.role === 'admin';
       }
-      console.log('Admin:', admin);
+    
       
       res.send({ admin });
     })
@@ -183,9 +186,7 @@ async function run() {
 
     app.get('/users/tutor/:email', verifyToken, async (req, res) => {
       const email = req.params.email;
-      console.log('Decoded Token Email:', req.decoded.email); // Debugging
-      console.log('Requested Email:', email);
-      // console.log(req.decoded);
+      
 
       if (email !== req.decoded.email) {
         return res.status(403).send({ message: 'forbidden access' })
@@ -197,7 +198,7 @@ async function run() {
       if (user) {
         tutor = user?.role === 'tutor';
       }
-      console.log('Tutor:', tutor);
+     
       
       res.send({ tutor });
     })
@@ -208,9 +209,7 @@ async function run() {
 
     app.get('/users/student/:email', verifyToken, async (req, res) => {
       const email = req.params.email;
-      console.log('Decoded Token Email:', req.decoded.email); // Debugging
-      console.log('Requested Email:', email);
-      // console.log(req.decoded);
+   
 
       if (email !== req.decoded.email) {
         return res.status(403).send({ message: 'forbidden access' })
@@ -222,7 +221,7 @@ async function run() {
       if (user) {
         student = user?.role === 'student';
       }
-      console.log('Student:', student);
+    
       
       res.send({ student });
     })
@@ -301,7 +300,7 @@ async function run() {
 
     app.post('/bookings', async (req, res) => {
       const item = req.body;
-      console.log(item);
+      
 
       if(item._id)
       {
@@ -327,7 +326,7 @@ async function run() {
         const result = await bookedSessionCollection.insertOne(item);
         res.send(result);
       } catch (error) {
-        console.error("Error inserting booking:", error);
+        
         res.status(500).send({ message: "Failed to book session!" });
       }
     });
@@ -336,7 +335,7 @@ async function run() {
 
     app.post("/comment", async (req, res) => {
       const data = req.body;
-      console.log(data);
+      
       const result = await commentCollection.insertOne(data);
       res.send(result);
     });
@@ -440,7 +439,7 @@ async function run() {
         );
         res.send(result);
       } catch (error) {
-        console.error("Error updating note:", error);
+        
         res.status(500).send({ message: "Failed to update note" });
       }
     });
@@ -465,7 +464,7 @@ async function run() {
         );
         res.send(result);
       } catch (error) {
-        console.error("Error updating note:", error);
+        
         res.status(500).send({ message: "Failed to update note" });
       }
     });
@@ -498,7 +497,7 @@ async function run() {
         );
         res.send(result);
       } catch (error) {
-        console.error("Error updating note:", error);
+        
         res.status(500).send({ message: "Failed to update note" });
       }
     });
@@ -516,7 +515,7 @@ async function run() {
       const email = req.params.email
       const query = { email }
       const user = req.body
-      console.log(user);
+      
       // check if user exists in db
       const isExist = await userCollection.findOne(query)
       if (isExist) {
@@ -562,9 +561,7 @@ async function run() {
     
 
   
-    console.log(
-      'Pinged your deployment. You successfully connected to MongoDB!'
-    )
+    
   } finally {
     // Ensures that the client will close when you finish/error
   }

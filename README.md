@@ -53,6 +53,6 @@
 - Pagination and Search
 
 
-### Blog Website
+### Study Platform Assessment
 # This assessment focuses on creating a Collaborative Study Platform that connects students, tutors, and administrators to streamline study session scheduling, resource sharing, and user management. By integrating these functionalities into a single platform, we aim to enhance collaboration, improve access to study materials, and ensure effective management of educational activities. This project will outline the key features, design principles, and implementation strategies necessary to develop a user-friendly and robust platform that supports the dynamic needs of modern education.
 
