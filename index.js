@@ -42,6 +42,7 @@ async function run() {
     const commentCollection =  db.collection('comments')
     const noteCollection =  db.collection('notes')
     const feedbackCollection =  db.collection('feedbacks')
+    const uploadMaterialCollection =  db.collection('uploadMaterials')
     // const plantsCollection = db.collection('plants')
 
     // save or update a user in db
@@ -135,6 +136,15 @@ async function run() {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) }
       const result = await noteCollection.deleteOne(query);
+      res.send(result);
+    })
+
+    
+
+    app.delete('/delete-materials/:id', verifyToken,async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) }
+      const result = await uploadMaterialCollection.deleteOne(query);
       res.send(result);
     })
 
@@ -238,6 +248,20 @@ async function run() {
     app.post('/feedback', verifyToken, verifyAdmin, async (req, res) => {
       const {title,description,tutorname,email,session_title} = req.body;
       const result = await feedbackCollection.insertOne({title,description,tutorname,email,session_title});
+      res.send(result);
+    });
+
+   
+
+    app.post('/upload-material', verifyToken,async (req, res) => {
+      const {session_title, title, sessionId, tutorEmail, link, imageUrl } = req.body;
+      const result = await uploadMaterialCollection.insertOne({ session_title,title, sessionId, tutorEmail, link, imageUrl,session_title });
+      res.send(result);
+    });
+
+
+    app.get('/view-materials', async (req, res) => {
+      const result = await uploadMaterialCollection.find().toArray();
       res.send(result);
     });
 
@@ -397,6 +421,31 @@ async function run() {
             $set: {
               title,
               description,
+            },
+          }
+        );
+        res.send(result);
+      } catch (error) {
+        console.error("Error updating note:", error);
+        res.status(500).send({ message: "Failed to update note" });
+      }
+    });
+
+
+ 
+
+
+    app.patch('/update-materials/:id',verifyToken, async (req, res) => {
+      const id = req.params.id;
+      const { title, link} = req.body; 
+    
+      try {
+        const result = await uploadMaterialCollection.updateOne(
+          { _id: new ObjectId(id) },
+          {
+            $set: {
+              title,
+              link,
             },
           }
         );
