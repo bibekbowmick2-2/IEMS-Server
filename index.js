@@ -8,7 +8,11 @@ const morgan = require('morgan')
 
 const port = process.env.PORT || 9000
 const app = express()
-app.use(cors()) 
+app.use(cors({
+  origin: 'https://bibek-iems-portal.netlify.app',
+  credentials: true
+
+})) 
 
 app.use(express.json())
 app.use(cookieParser())
