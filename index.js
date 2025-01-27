@@ -394,6 +394,20 @@ async function run() {
     })
 
 
+
+    app.patch('/request/:id', verifyToken, async (req, res) => {
+      const {id}= req.params;
+      const filter = { _id: new ObjectId(id) };
+      const updatedDoc = {
+        $set: {
+          status: 'pending'
+        }
+      }
+      const result = await sessionCollection.updateOne(filter, updatedDoc);
+      res.send(result);
+    })
+
+
     app.patch('/registration/fee/:id', verifyToken, verifyAdmin, async (req, res) => {
       const id = req.params.id;
       const {fee}= req.body;
