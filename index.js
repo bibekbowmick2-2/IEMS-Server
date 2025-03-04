@@ -93,6 +93,25 @@ async function run() {
 
     
 
+    
+    app.get('/information', verifyToken, verifyAdmin, async (req, res) => {
+      const result = await sessionCollection.find().toArray();
+      const query1 = {role: 'admin'}
+      const query2 ={role: 'tutor'}
+      const query3 = {role: 'student'}
+      const query4 = {status:'approved'}
+      const query5 = {status:'pending'}
+      const query6 = {status:'rejected'}
+      const admin = await userCollection.countDocuments(query1);
+      const tutor = await userCollection.countDocuments(query2);
+      const student = await userCollection.countDocuments(query3);
+      const approved = await sessionCollection.countDocuments(query4);
+      const pending = await sessionCollection.countDocuments(query5);
+      const rejected = await sessionCollection.countDocuments(query6);
+      const length = result.length;
+      res.send({length,admin,tutor,student,approved,pending,rejected});
+    });
+
    
     // users related api
     app.get('/users', verifyToken, verifyAdmin, async (req, res) => {
