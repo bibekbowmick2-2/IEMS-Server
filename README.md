@@ -25,6 +25,69 @@
 
 
 
+# 📚 Collaborative Study Platform
+
+A unified platform connecting **students**, **tutors**, and **administrators** to enhance educational collaboration and streamline academic activities.
+
+---
+
+## ✨ Project Highlights
+
+- 🤝 **Collaboration-Centric Design**  
+  Foster connections between students and tutors through shared resources and study sessions.
+
+- 📅 **Streamlined Study Session Scheduling**  
+  Easily create, view, and manage one-on-one or group sessions.
+
+- 📂 **Centralized Resource Sharing**  
+  Upload, access, and manage educational materials like notes, guides, and video tutorials.
+
+- 🛠️ **Role-Based User Management**  
+  Tailored access and dashboards for:
+  - 👩‍🎓 Students
+  - 👨‍🏫 Tutors
+  - 👨‍💼 Administrators
+
+- 🎯 **User-Friendly Interface**  
+  Intuitive UI/UX focused on ease of use for all user types, built with modern frontend tools.
+
+- 🔒 **Secure Authentication & Authorization**  
+  Ensure data privacy and controlled access with robust login and role management systems.
+
+---
+
+## 🧱 Design Principles
+
+- 🧩 **Modular Architecture**  
+  Easily maintainable and scalable components.
+
+- 🎨 **Clean & Responsive UI**  
+  Built using **Tailwind CSS** and **React** to support all devices.
+
+- 🚀 **Performance-Oriented**  
+  Optimized for fast load times and smooth interactions.
+
+---
+
+## 🔧 Implementation Strategy
+
+- 🧑‍💻 **Frontend**: React + Tailwind CSS + Flowbite + Daisy UI 
+- 🗃️ **Backend**: Node.js, Express.js 
+- 🗂️ **Database**: MongoDB for scalable data management  
+- 🛡️ **Authentication**: Firebase for role-based access control  
+- ☁️ **Hosting**: Vercel, Netlify or similar cloud platform for deployment
+
+---
+
+## 🎓 Goal
+
+To create a robust and modern educational platform that supports the **dynamic needs** of learners and educators in a collaborative digital space.
+
+---
+
+
+
+
 ---
 
 
@@ -77,66 +140,10 @@
 - Pagination and Search
 
 
-# 📚 Collaborative Study Platform
 
-A unified platform connecting **students**, **tutors**, and **administrators** to enhance educational collaboration and streamline academic activities.
+  
 
----
 
-## ✨ Project Highlights
-
-- 🤝 **Collaboration-Centric Design**  
-  Foster connections between students and tutors through shared resources and study sessions.
-
-- 📅 **Streamlined Study Session Scheduling**  
-  Easily create, view, and manage one-on-one or group sessions with integrated calendar features.
-
-- 📂 **Centralized Resource Sharing**  
-  Upload, access, and manage educational materials like notes, guides, and video tutorials.
-
-- 🛠️ **Role-Based User Management**  
-  Tailored access and dashboards for:
-  - 👩‍🎓 Students
-  - 👨‍🏫 Tutors
-  - 👨‍💼 Administrators
-
-- 🎯 **User-Friendly Interface**  
-  Intuitive UI/UX focused on ease of use for all user types, built with modern frontend tools.
-
-- 🔒 **Secure Authentication & Authorization**  
-  Ensure data privacy and controlled access with robust login and role management systems.
-
----
-
-## 🧱 Design Principles
-
-- 🧩 **Modular Architecture**  
-  Easily maintainable and scalable components.
-
-- 🎨 **Clean & Responsive UI**  
-  Built using **Tailwind CSS** and **React** to support all devices.
-
-- 🚀 **Performance-Oriented**  
-  Optimized for fast load times and smooth interactions.
-
----
-
-## 🔧 Implementation Strategy
-
-- 🧑‍💻 **Frontend**: React + Tailwind CSS + Flowbite  
-- 🗃️ **Backend**: Node.js / Next.js with API routes  
-- 🗂️ **Database**: MongoDB for scalable data management  
-- 🛡️ **Authentication**: NextAuth for role-based access control  
-- ☁️ **Hosting**: Vercel or similar cloud platform for deployment
--  **Security:** JWT, ENV files
-
----
-
-## 🎓 Goal
-
-To create a robust and modern educational platform that supports the **dynamic needs** of learners and educators in a collaborative digital space.
-
----
 
 
 ![Screenshot_20](https://github.com/user-attachments/assets/ee08c4c8-3388-4e0a-a49e-7e1af3f1255f)
