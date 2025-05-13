@@ -2,17 +2,12 @@
 
 
 # Project Name: IEMS: Collaborative Study Platform
-# Project Category: category_022
 # Live Site Link: https://bibek-iems-portal.netlify.app/
 # Admin Email: admin@gmail.com
 # Admin Password: 123456
 
 
-# Project Name: IEMS: Collaborative Study Platform
-# Project Category: category_022
-# Live Site Link: https://bibek-iems-portal.netlify.app/
-# Admin Email: admin@gmail.com
-# Admin Password: 123456
+
 
 # Student Email:fairooz@gmail.com
 # Student Password: 123456
